@@ -20,7 +20,11 @@
           <div class="filter stopPop" id="filter">
             <dl class="filter-price">
               <dt>Price:</dt>
-              <dd><a href="javascript:void(0)">All</a></dd>
+              <dd><a href="javascript:void(0)" @click="setPriceFilter('all')"
+                     v-bind:class="{'cur':priceChecked=='all'}">All</a></dd>
+              <dd v-for="(item,index) in priceFilter">
+                <a href="javascript:void(0)" @click="setPriceFilter(index)" v-bind:class="{'cur':priceChecked==index}">{{item.startPrice}} - {{item.endPrice}}</a>
+              </dd>
             </dl>
           </div>
 
@@ -68,6 +72,25 @@
         page: 1,
         pageSize: 8,
         busy: true, // 控制加载动画
+        priceFilter: [ // 价格区间数组
+          {
+            startPrice: '0.00',
+            endPrice: '100.00'
+          },
+          {
+            startPrice: '100.00',
+            endPrice: '500.00'
+          },
+          {
+            startPrice: '500.00',
+            endPrice: '1000.00'
+          },
+          {
+            startPrice: '1000.00',
+            endPrice: '5000.00'
+          }
+        ],
+        priceChecked: 'all',
       }
     },
     mounted() {
@@ -79,15 +102,16 @@
           page: this.page,
           pageSize: this.pageSize,
           sort: this.sortFlag ? 1 : -1,
+          priceLevel: this.priceChecked
         };
         axios.get('/goods', {params}).then((response) => {
           let res = response.data
           if (res.status === 0) {
             // 加载更多
-            if (true) {
+            if (flag) {
               this.goodsList = this.goodsList.concat(res.result.list)
 
-              // 如果没有数据,禁用动画
+              // 如果没有数据,禁用加载动画
               if (res.result.count === 0) {
                 this.busy = true;
               } else {
@@ -95,6 +119,8 @@
               }
             } else {
               this.goodsList = res.result.list
+              console.log('no-concat')
+              console.log(this.goodsList)
             }
 
           } else {
@@ -107,13 +133,18 @@
         this.sortFlag = !this.sortFlag
         this._getGoodsList()
       },
-      loadMore() {
+      loadMore() { // 翻页加载动画
         this.busy = true;
         setTimeout(() => {
           this.page++;
           this._getGoodsList(true);
         }, 500);
       },
+      setPriceFilter(index) { // 价格筛选
+        this.priceChecked = index;
+        this.page = 1;
+        this._getGoodsList();
+      }
     },
     components: {
       NavHeader,
