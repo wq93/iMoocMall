@@ -7,7 +7,12 @@
         <div class="filter-nav">
           <span class="sortby">Sort by:</span>
           <a href="javascript:void(0)" class="default cur">Default</a>
-          <a href="javascript:void(0)" class="price" @click="sortGoods()">Price </a>
+          <a href="javascript:void(0)" class="price" @click="sortGoods">
+            Price
+            <svg class="icon icon-arrow-short">
+              <use xlink:href="#icon-arrow-short"></use>
+            </svg>
+          </a>
           <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
         </div>
         <div class="accessory-result">
@@ -54,7 +59,9 @@
     data() {
       return {
         goodsList: [],
-        sortFlag: true
+        sortFlag: true,
+        page: 1,
+        pageSize: 8
       }
     },
     mounted() {
@@ -62,7 +69,12 @@
     },
     methods: {
       _getGoodsList() {
-        axios.get('/goods?page=1&pageSize=8&sort=-1').then((response) => {
+        let params = {
+          page: this.page,
+          pageSize: this.pageSize,
+          sort: this.sortFlag ? 1 : -1,
+        };
+        axios.get('/goods', {params}).then((response) => {
           let res = response.data
           if (res.status === 0) {
             this.goodsList = res.result.list
@@ -70,6 +82,11 @@
             this.goodsList = []
           }
         })
+      },
+      sortGoods() {
+        this.page = 1
+        this.sortFlag = !this.sortFlag
+        this._getGoodsList()
       }
     },
     components: {
