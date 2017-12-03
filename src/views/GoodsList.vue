@@ -45,10 +45,11 @@
                   </div>
                 </li>
               </ul>
-              <div v-infinite-scroll="loadMore"
+              <div class="view-more-normal"
+                   v-infinite-scroll="loadMore"
                    infinite-scroll-disabled="busy"
                    infinite-scroll-distance="20">
-                加载中...
+                <img src="./../assets/loading-spinning-bubbles.svg" v-show="loading">
               </div>
             </div>
           </div>
@@ -91,6 +92,7 @@
           }
         ],
         priceChecked: 'all',
+        loading: false // loading显隐
       }
     },
     mounted() {
@@ -104,13 +106,14 @@
           sort: this.sortFlag ? 1 : -1,
           priceLevel: this.priceChecked
         };
+        this.loading = true
         axios.get('/goods', {params}).then((response) => {
           let res = response.data
+          this.loading = false
           if (res.status === 0) {
             // 加载更多
             if (flag) {
               this.goodsList = this.goodsList.concat(res.result.list)
-
               // 如果没有数据,禁用加载动画
               if (res.result.count === 0) {
                 this.busy = true;
@@ -119,10 +122,8 @@
               }
             } else {
               this.goodsList = res.result.list
-              console.log('no-concat')
-              console.log(this.goodsList)
+              this.busy = false;
             }
-
           } else {
             this.goodsList = []
           }
