@@ -28,7 +28,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: { //跨域代理
-
+      // vue跨域代理小坑: 'http://localhost:3000'=>'ip://localhost:3000' 才能代理成功
       '/goods':{
           target:'ip://localhost:3000'
       },
