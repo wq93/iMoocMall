@@ -41,6 +41,11 @@
                   </div>
                 </li>
               </ul>
+              <div v-infinite-scroll="loadMore"
+                   infinite-scroll-disabled="busy"
+                   infinite-scroll-distance="20">
+                加载中...
+              </div>
             </div>
           </div>
         </div>
@@ -61,14 +66,15 @@
         goodsList: [],
         sortFlag: true,
         page: 1,
-        pageSize: 8
+        pageSize: 8,
+        busy: true, // 控制加载动画
       }
     },
     mounted() {
       this._getGoodsList()
     },
     methods: {
-      _getGoodsList() {
+      _getGoodsList(flag) {
         let params = {
           page: this.page,
           pageSize: this.pageSize,
@@ -77,7 +83,20 @@
         axios.get('/goods', {params}).then((response) => {
           let res = response.data
           if (res.status === 0) {
-            this.goodsList = res.result.list
+            // 加载更多
+            if (true) {
+              this.goodsList = this.goodsList.concat(res.result.list)
+
+              // 如果没有数据,禁用动画
+              if (res.result.count === 0) {
+                this.busy = true;
+              } else {
+                this.busy = false;
+              }
+            } else {
+              this.goodsList = res.result.list
+            }
+
           } else {
             this.goodsList = []
           }
@@ -87,7 +106,14 @@
         this.page = 1
         this.sortFlag = !this.sortFlag
         this._getGoodsList()
-      }
+      },
+      loadMore() {
+        this.busy = true;
+        setTimeout(() => {
+          this.page++;
+          this._getGoodsList(true);
+        }, 500);
+      },
     },
     components: {
       NavHeader,

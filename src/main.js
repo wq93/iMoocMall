@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuex from 'vuex'
+import infiniteScroll from 'vue-infinite-scroll'
 
 // 加载对应的css文件
 import './assets/css/base.css'
@@ -12,6 +13,8 @@ import './assets/css/product.css'
 Vue.config.productionTip = false;
 
 Vue.use(Vuex);
+Vue.use(infiniteScroll)
+
 const store = new Vuex.Store({
   state: {
     nickName:'',
