@@ -11,6 +11,10 @@
     </section>
 </template>
 <style>
+  nav {
+    max-width: 1280px;
+    margin: 0 auto
+  }
   .bread{
       height: 45px;
       line-height: 45px;

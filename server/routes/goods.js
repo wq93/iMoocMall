@@ -3,7 +3,7 @@ var router = express.Router()
 var mongoose = require('mongoose')
 // 取数据库模型
 var Goods = require('../models/goods')
-var Users = require('../models/goods')
+var User = require('../models/user')
 
 // 连接mongoDB数据库
 mongoose.connect('mongodb://127.0.0.1:27017/dumall')
@@ -82,46 +82,73 @@ router.get("/", function (req, res, next) {
 // 加入购物车
 router.post("/addCart", function (req, res, next) {
   let userId = '100000077'
-  let productId = req.body("productId")
-  Users.findOne({userId}, (err, userDoc) => {
+  let productId = req.body.productId
+  // let productId = '201710003'
+  User.findOne({userId: userId}, function (err, userDoc) {
     if (err) {
       res.json({
-        status: 1,
+        status: "1",
         msg: err.message
       })
     } else {
-      console.log(userDoc)
       if (userDoc) {
-        Goods.findOne({productId}, (err1, doc) => {
-          if (err1) {
-            res.json({
-              status: 1,
-              msg: err1.message
-            })
-          } else {
-            if (doc) {
-              // 给当前商品添加数量和选中属性
-              doc.productNum = 1
-              doc.checked = 1
-              // users集合的cartList数组 push对象
-              Users.cartList.push(doc)
-              Users.save((err2, doc2) => {
-                if (err2) {
-                  res.json({
-                    status: 1,
-                    msg: err2.message
-                  })
-                } else {
-                  res.json({
-                    status: 0,
-                    msg: '',
-                    result: 'suc'
-                  })
-                }
+        var goodsItem = '';
+        userDoc.cartList.forEach(function (item) {
+          // 如果商品存在数组中
+          if (item.productId == productId) {
+            console.log(item)
+            goodsItem = item;
+            item.productNum++;
+          }
+        });
+        // 如果商品存在数组中(数量累加保存)
+        if (goodsItem) {
+          userDoc.save(function (err3, doc2) {
+            if (err3) {
+              res.json({
+                status: 1,
+                msg: err2.message
+              })
+            } else {
+              res.json({
+                status: 0,
+                msg: '',
+                result: 'suc'
               })
             }
-          }
-        })
+          })
+        } else {
+          // 如果商品不存在数组中(按id找到,添加到cartList数组中)
+          Goods.findOne({productId: productId}, function (err1, doc) {
+            if (err1) {
+              res.json({
+                status: 1,
+                msg: err1.message
+              })
+            } else {
+
+              if (doc) {
+                doc.productNum = 1;
+                doc.checked= 1;
+                userDoc.cartList.push(doc);
+                userDoc.save(function (err2, doc2) {
+                  if (err2) {
+                    res.json({
+                      status: 1,
+                      msg: err2.message
+                    })
+                  } else {
+                    res.json({
+                      status: 0,
+                      msg: '',
+                      result: 'suc'
+                    })
+                  }
+                })
+              }
+            }
+          });
+        }
       }
     }
   })
