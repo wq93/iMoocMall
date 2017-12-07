@@ -9,9 +9,7 @@
           <a href="javascript:void(0)" class="default cur">Default</a>
           <a href="javascript:void(0)" class="price" @click="sortGoods">
             Price
-            <svg class="icon icon-arrow-short">
-              <use xlink:href="#icon-arrow-short"></use>
-            </svg>
+            <i class="iconfont" :class="priceFlag"></i>
           </a>
           <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
         </div>
@@ -97,6 +95,11 @@
     },
     mounted() {
       this._getGoodsList()
+    },
+    computed: {
+      priceFlag() {
+        return this.sortFlag ? 'icon-shangfan' : 'icon-xiafan'
+      }
     },
     methods: {
       _getGoodsList(flag) {
