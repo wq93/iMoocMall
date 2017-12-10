@@ -3,7 +3,7 @@ var router = express.Router()
 var mongoose = require('mongoose')
 // 取数据库模型
 var Goods = require('../models/goods')
-var User = require('../models/user')
+var User = require('../models/users')
 
 // 连接mongoDB数据库
 mongoose.connect('mongodb://127.0.0.1:27017/dumall')
