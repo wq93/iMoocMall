@@ -8,7 +8,7 @@ router.get('/', function (req, res, next) {
 router.get('/test', function (req, res, next) {
   res.send('test');
 });
-// 定义登录路由
+// 定义登录接口
 router.post('/login', (req, res, next) => {
   let param = {
     userName: req.body.userName,
@@ -42,6 +42,23 @@ router.post('/login', (req, res, next) => {
         })
       }
     }
+  })
+})
+// 定义登出接口
+router.post('/logout', (req, res, next) => {
+  // 设置cookie
+  res.cookie('userId', '', {
+    path: '/',
+    maxAge: -1
+  });
+  res.cookie("userName","",{
+    path:"/",
+    maxAge:-1
+  });
+  res.json({
+    status: 0,
+    msg: '',
+    result: ''
   })
 })
 module.exports = router;

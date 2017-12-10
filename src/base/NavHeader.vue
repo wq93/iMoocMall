@@ -37,8 +37,14 @@
       <div class="navbar-right-container" style="display: flex;">
         <div class="navbar-menu-container">
           <span class="navbar-link user-tip" v-show="nickName">欢迎你, {{nickName}}</span>
-          <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true" v-show="!nickName">Login</a>
-          <a href="javascript:void(0)" class="navbar-link" v-show="nickName">Logout</a>
+          <a href="javascript:void(0)"
+             class="navbar-link"
+             @click="loginModalFlag=true"
+             v-show="!nickName">Login</a>
+          <a href="javascript:void(0)"
+             class="navbar-link"
+             v-show="nickName"
+             @click="logout">Logout</a>
           <div class="navbar-cart-container">
             <span class="navbar-cart-count"></span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -121,6 +127,14 @@
           } else {
             this.errorTip = true
             this.loginModalFlag = true
+          }
+        })
+      },
+      logout() {
+        axios.post('/users/logout').then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+            this.nickName = ''
           }
         })
       }
