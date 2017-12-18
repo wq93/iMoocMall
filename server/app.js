@@ -26,6 +26,25 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 设置登录/登出拦截
+app.use(function (req, res, next) {
+  if (req.cookies.userId) {
+    next();
+  } else {
+    console.log("url:" + req.originalUrl);
+    // 设置路由白名单
+    if (req.originalUrl == '/users/login' || req.originalUrl == '/users/logout' || req.originalUrl.indexOf('/goods/list') > -1) {
+      next();
+    } else {
+      res.json({
+        status: 10001,
+        msg: '当前未登录',
+        result: ''
+      });
+    }
+  }
+})
+
 // 通过路由读取文件
 app.use('/', index);
 app.use('/users', users);

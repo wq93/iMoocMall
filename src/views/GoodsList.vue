@@ -110,7 +110,7 @@
           priceLevel: this.priceChecked
         };
         this.loading = true
-        axios.get('/goods', {params}).then((response) => {
+        axios.get('/goods/list', {params}).then((response) => {
           let res = response.data
           this.loading = false
           if (res.status === 0) {

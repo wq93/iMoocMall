@@ -20,7 +20,7 @@ mongoose.connection.on("disconnected", function () {
   console.log("MongoDB connected disconnected")
 })
 // 查询商品列表数据
-router.get("/", function (req, res, next) {
+router.get("/list", function (req, res, next) {
   // res.send('hello,good list')
   // 获取参数
   let page = parseInt(req.param('page'))
