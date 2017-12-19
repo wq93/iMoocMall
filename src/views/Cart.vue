@@ -59,7 +59,7 @@
                 <li>Edit</li>
               </ul>
             </div>
-            <ul class="cart-item-list">
+            <ul class="cart-item-list" v-for="(item,index) in cartList">
               <li>
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
@@ -70,28 +70,28 @@
                     </a>
                   </div>
                   <div class="cart-item-pic">
-                    <img src="/static/1.jpg">
+                    <img v-lazy="'/static/'+item.productImage" v-bind:alt="item.productName">
                   </div>
                   <div class="cart-item-title">
-                    <div class="item-name">XX</div>
+                    <div class="item-name">{{item.productName}}</div>
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">1000</div>
+                  <div class="item-price">{{item.salePrice}}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
                         <a class="input-sub">-</a>
-                        <span class="select-ipt">10</span>
+                        <span class="select-ipt">{{item.productNum}}</span>
                         <a class="input-add">+</a>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">100</div>
+                  <div class="item-price-total">{{item.productNum * item.salePrice}}</div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">

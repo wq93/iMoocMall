@@ -3,7 +3,7 @@ import App from './App'
 import router from './router'
 import Vuex from 'vuex'
 import infiniteScroll from 'vue-infinite-scroll'
-
+import VueLazyLoad from 'vue-lazyload'
 // 加载对应的css文件
 import './assets/css/base.css'
 import './assets/css/checkout.css'
@@ -14,7 +14,10 @@ Vue.config.productionTip = false;
 
 Vue.use(Vuex);
 Vue.use(infiniteScroll)
-
+Vue.use(VueLazyLoad, {
+  loading: 'static/loading-svg/loading-bars.svg',
+  try: 3 // default 1
+})
 const store = new Vuex.Store({
   state: {
     nickName:'',
