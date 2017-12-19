@@ -106,7 +106,20 @@
         nickName: ''
       }
     },
+    mounted() {
+      this.checkLogin();
+    },
     methods: {
+      checkLogin() {
+        axios.get('/users/checkLogin').then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+            this.nickName = res.result
+          } else {
+
+          }
+        })
+      },
       login() {
         // 用户或者密码为空的时候
         if (!this.userName || !this.userPwd) {
