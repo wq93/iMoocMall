@@ -151,7 +151,22 @@
 
   export default {
     data() {
-      return {}
+      return {
+        cartList: []
+      }
+    },
+    mounted() {
+      this._initCartList();
+    },
+    methods: {
+      _initCartList() {
+        axios.get('/users/cartList').then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+            this.cartList = res.result
+          }
+        })
+      }
     },
     components: {
       NavHeader,
