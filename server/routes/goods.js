@@ -129,7 +129,8 @@ router.post("/addCart", function (req, res, next) {
 
               if (doc) {
                 doc.productNum = 1;
-                doc.checked= 1;
+                // 默认选中
+                doc.checked = 1;
                 userDoc.cartList.push(doc);
                 userDoc.save(function (err2, doc2) {
                   if (err2) {

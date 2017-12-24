@@ -63,7 +63,7 @@
               <li>
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn">
+                    <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{'check': item.checked==='1'}" @click="editCart('checked',item)">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
@@ -200,20 +200,23 @@
             return;
           }
           item.productNum--;
+        }  else if (flag == 'checked') { // 修改选中
+          item.checked = item.checked=="1"?'0':'1';
         }
         this.saveCart(item)
-
       },
       saveCart(item) {
         let productId = item.productId
         let productNum = item.productNum
+        let checked = item.checked
         axios.post('users/cartEdit', {
           productId,
-          productNum
+          productNum,
+          checked
         }).then((response) => {
           let res = response.data
           if (res.status === 0) {
-           console.log(res)
+            console.log(res)
           }
         })
       }

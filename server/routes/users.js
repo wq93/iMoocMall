@@ -143,6 +143,7 @@ router.post('/cartEdit', (req, res, next) => {
   let userId = req.cookies.userId
   let productId = req.body.productId
   let productNum = req.body.productNum
+  let checked = req.body.checked
   // console.log(userId,productId,productNum)
   // mongoose的api 修改子文档
   User.update({
@@ -151,7 +152,8 @@ router.post('/cartEdit', (req, res, next) => {
     'cartList.productId': productId
   }, {
     // $ 层级通配符
-    'cartList.$.productNum': productNum
+    'cartList.$.productNum': productNum,
+    'cartList.$.checked': checked,
   }, (err, doc) => {
     if (err) {
       res.json({
