@@ -136,4 +136,41 @@ router.post('/cartDel', (req, res, next) => {
   });
 
 })
+
+// 修改当前用户的购物车商品的数量
+router.post('/cartEdit', (req, res, next) => {
+  // 用户id
+  let userId = req.cookies.userId
+  let productId = req.body.productId
+  let productNum = req.body.productNum
+  // mongoose的api 修改子文档
+  User.update({
+    // 根据userId条件查找
+    userId,
+    'carList.productId': productId
+  }, {
+    // $ 层级通配符
+    'carList.$.productNum': productNum
+  }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        msg: error.message,
+        result: ''
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: 0,
+          msg: '更新成功',
+          result: {
+            productId,
+            productNum
+          }
+        })
+      }
+    }
+  });
+
+})
 module.exports = router;
