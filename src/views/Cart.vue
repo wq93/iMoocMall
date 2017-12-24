@@ -180,7 +180,16 @@
       },
       // 发送删除请求
       delCart() {
-
+        let productId = this.delItem.productId
+        axios.post('/users/cartDel', {
+          productId
+        }).then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+            this.modalConfirm = false
+            this._initCartList()
+          }
+        })
       }
     },
     components: {

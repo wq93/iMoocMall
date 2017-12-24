@@ -100,4 +100,40 @@ router.get('/cartList', (req, res, next) => {
     }
   })
 })
+// 删除当前用户的购物车单条数据
+router.post('/cartDel', (req, res, next) => {
+  // 用户id
+  let userId = req.cookies.userId
+  let productId = req.body.productId
+  // mongoose的api
+  User.update({
+    // 根据userId条件查找
+    userId
+  }, {
+    $pull: {
+      // cartList集合下的
+      'cartList': {
+        // 这个元素
+        productId
+      }
+    }
+  }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        msg: error.message,
+        result: ''
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: 0,
+          msg: '删除成功',
+          result: 'suc'
+        })
+      }
+    }
+  });
+
+})
 module.exports = router;
