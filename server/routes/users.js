@@ -143,14 +143,15 @@ router.post('/cartEdit', (req, res, next) => {
   let userId = req.cookies.userId
   let productId = req.body.productId
   let productNum = req.body.productNum
+  // console.log(userId,productId,productNum)
   // mongoose的api 修改子文档
   User.update({
     // 根据userId条件查找
     userId,
-    'carList.productId': productId
+    'cartList.productId': productId
   }, {
     // $ 层级通配符
-    'carList.$.productNum': productNum
+    'cartList.$.productNum': productNum
   }, (err, doc) => {
     if (err) {
       res.json({

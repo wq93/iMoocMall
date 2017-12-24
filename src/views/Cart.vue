@@ -201,7 +201,22 @@
           }
           item.productNum--;
         }
+        this.saveCart(item)
+
       },
+      saveCart(item) {
+        let productId = item.productId
+        let productNum = item.productNum
+        axios.post('users/cartEdit', {
+          productId,
+          productNum
+        }).then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+           console.log(res)
+          }
+        })
+      }
     },
     components: {
       NavHeader,
