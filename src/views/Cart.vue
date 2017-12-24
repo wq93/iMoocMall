@@ -95,7 +95,7 @@
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn">
+                    <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -130,11 +130,12 @@
         </div>
       </div>
     </div>
-    <modal>
+    <!--close子组件向上传递的事件-->
+    <modal :mdShow="modalConfirm" @close="closeModal">
       <p slot="message">你确认要删除此条数据吗?</p>
       <div slot="btnGroup">
-        <a class="btn btn--m" href="javascript:;">确认</a>
-        <a class="btn btn--m btn--red" href="javascript:;">关闭</a>
+        <a class="btn btn--m" href="javascript:;" @click="delCart">确认</a>
+        <a class="btn btn--m btn--red" href="javascript:;" @click="modalConfirm = false">关闭</a>
       </div>
     </modal>
     <nav-footer></nav-footer>
@@ -152,7 +153,9 @@
   export default {
     data() {
       return {
-        cartList: []
+        cartList: [],
+        modalConfirm: false, // 控制显隐
+        delItem: {} // 删除的商品
       }
     },
     mounted() {
@@ -166,6 +169,18 @@
             this.cartList = res.result
           }
         })
+      },
+      closeModal() {
+        this.modalConfirm = false;
+      },
+      // 弹框
+      delCartConfirm(item) {
+        this.delItem = item
+        this.modalConfirm = true
+      },
+      // 发送删除请求
+      delCart() {
+
       }
     },
     components: {
