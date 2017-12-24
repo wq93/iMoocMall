@@ -83,9 +83,9 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub">-</a>
+                        <a class="input-sub" @click="editCart('minu',item)">-</a>
                         <span class="select-ipt">{{item.productNum}}</span>
-                        <a class="input-add">+</a>
+                        <a class="input-add" @click="editCart('add',item)">+</a>
                       </div>
                     </div>
                   </div>
@@ -190,7 +190,18 @@
             this._initCartList()
           }
         })
-      }
+      },
+      // 修改数量
+      editCart(flag, item) {
+        if (flag == 'add') {
+          item.productNum++;
+        } else if (flag == 'minu') {
+          if (item.productNum <= 1) {
+            return;
+          }
+          item.productNum--;
+        }
+      },
     },
     components: {
       NavHeader,
