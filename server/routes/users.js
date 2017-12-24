@@ -168,7 +168,8 @@ router.post('/cartEdit', (req, res, next) => {
           msg: '更新成功',
           result: {
             productId,
-            productNum
+            productNum,
+            checked
           }
         })
       }
