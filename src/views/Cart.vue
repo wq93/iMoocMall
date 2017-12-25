@@ -121,7 +121,7 @@
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                Item total: <span class="total-price">500</span>
+                Item total: <span class="total-price">{{totalPrice}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red">Checkout</a>
@@ -173,6 +173,16 @@
           if (item.checked === '1') count++
         })
         return count
+      },
+      // 选中的总金额
+      totalPrice(){
+        let money = 0;
+        this.cartList.forEach((item)=>{
+          if(item.checked=='1'){
+            money += parseFloat(item.salePrice)*parseInt(item.productNum);
+          }
+        })
+        return money;
       }
     },
     methods: {
@@ -235,6 +245,8 @@
         })
       },
       toggleCheckAll() {
+        // 通过计算属性声明的变量不能自己负责自己,因为值是实时变化的
+        //this.checkAllFlag = !this.checkAllFlag
         let flag = !this.checkAllFlag
         let checkAll = flag
         // 改变每一个商品状态
