@@ -121,7 +121,7 @@
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                Item total: <span class="total-price">{{totalPrice}}</span>
+                Item total: <span class="total-price">{{totalPrice | currency('$')}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red">Checkout</a>
@@ -150,6 +150,7 @@
   import NavBread from '../base/NavBread.vue'
   import NavFooter from '../base/NavFooter.vue'
   import Modal from '../components/Modal.vue'
+  import {currency} from '../util/currency'
 
   export default {
     data() {
@@ -161,6 +162,11 @@
     },
     mounted() {
       this._initCartList();
+    },
+    // 局部过滤器
+    filters: {
+      // 传递一个函数进去
+      currency: currency
     },
     computed: {
       // 全部选中标记
@@ -175,11 +181,11 @@
         return count
       },
       // 选中的总金额
-      totalPrice(){
+      totalPrice() {
         let money = 0;
-        this.cartList.forEach((item)=>{
-          if(item.checked=='1'){
-            money += parseFloat(item.salePrice)*parseInt(item.productNum);
+        this.cartList.forEach((item) => {
+          if (item.checked == '1') {
+            money += parseFloat(item.salePrice) * parseInt(item.productNum);
           }
         })
         return money;
