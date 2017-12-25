@@ -63,7 +63,8 @@
               <li>
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{'check': item.checked==='1'}" @click="editCart('checked',item)">
+                    <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{'check': item.checked==='1'}"
+                       @click="editCart('checked',item)">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
@@ -110,8 +111,8 @@
           <div class="cart-foot-inner">
             <div class="cart-foot-l">
               <div class="item-all-check">
-                <a href="javascipt:;">
-                  <span class="checkbox-btn item-check-btn">
+                <a href="javascipt:;" @click="toggleCheckAll">
+                  <span class="checkbox-btn item-check-btn" :class="{'check':checkAllFlag}">
                       <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
                   </span>
                   <span>Select all</span>
@@ -155,7 +156,8 @@
       return {
         cartList: [],
         modalConfirm: false, // 控制显隐
-        delItem: {} // 删除的商品
+        delItem: {}, // 删除的商品
+        checkAllFlag: false, // 全部选中
       }
     },
     mounted() {
@@ -200,8 +202,8 @@
             return;
           }
           item.productNum--;
-        }  else if (flag == 'checked') { // 修改选中
-          item.checked = item.checked=="1"?'0':'1';
+        } else if (flag == 'checked') { // 修改选中
+          item.checked = item.checked == "1" ? '0' : '1';
         }
         this.saveCart(item)
       },
@@ -218,6 +220,13 @@
           if (res.status === 0) {
             console.log(res)
           }
+        })
+      },
+      toggleCheckAll() {
+        this.checkAllFlag = !this.checkAllFlag
+        // 改变状态
+        this.cartList.forEach((item)=>{
+          item.checked = this.checkAllFlag?'1':'0';
         })
       }
     },

@@ -177,4 +177,43 @@ router.post('/cartEdit', (req, res, next) => {
   });
 
 })
+
+// 全部选中当前用户的购物车商品的数量
+router.post('/editCheckAll', (req, res, next) => {
+  // 用户id
+  let userId = req.cookies.userId
+  let checkAll = req.body.checkAll ? '1' : '0'
+  // 根据id查找用户
+  User.findOne({userId}, (err, user) => {
+    if (err) {
+      res.json({
+        status: 1,
+        msg: error.message,
+        result: ''
+      })
+    } else {
+      if (user) {
+        user.cartList.forEach((item) => {
+          item.checked = checkAll
+        })
+        user.save((err1, doc) => {
+          console.log(doc)
+          if (err1) {
+            res.json({
+              status: '1',
+              msg: err1, message,
+              result: ''
+            });
+          } else {
+            res.json({
+              status: '0',
+              msg: '',
+              result: 'suc'
+            });
+          }
+        })
+      }
+    }
+  })
+})
 module.exports = router;
