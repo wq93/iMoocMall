@@ -157,11 +157,23 @@
         cartList: [],
         modalConfirm: false, // 控制显隐
         delItem: {}, // 删除的商品
-        checkAllFlag: false, // 全部选中
       }
     },
     mounted() {
       this._initCartList();
+    },
+    computed: {
+      // 全部选中标记
+      checkAllFlag() {
+        return this.checkedCount === this.cartList.length
+      },
+      checkedCount() {
+        let count = 0
+        this.cartList.forEach((item) => {
+          if (item.checked === '1') count++
+        })
+        return count
+      }
     },
     methods: {
       _initCartList() {
@@ -223,10 +235,17 @@
         })
       },
       toggleCheckAll() {
-        this.checkAllFlag = !this.checkAllFlag
-        // 改变状态
-        this.cartList.forEach((item)=>{
-          item.checked = this.checkAllFlag?'1':'0';
+        let flag = !this.checkAllFlag
+        let checkAll = flag
+        // 改变每一个商品状态
+        this.cartList.forEach((item) => {
+          item.checked = flag ? '1' : '0';
+        })
+        axios.post('/users/editCheckAll', {checkAll}).then((response) => {
+          let res = response.data;
+          if (res.status === 0) {
+            console.log("update suc");
+          }
         })
       }
     },

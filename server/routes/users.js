@@ -200,15 +200,17 @@ router.post('/editCheckAll', (req, res, next) => {
           console.log(doc)
           if (err1) {
             res.json({
-              status: '1',
+              status: 1,
               msg: err1, message,
               result: ''
             });
           } else {
             res.json({
-              status: '0',
+              status: 0,
               msg: '',
-              result: 'suc'
+              result: {
+                cartList: doc.cartList
+              }
             });
           }
         })
