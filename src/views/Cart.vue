@@ -164,10 +164,10 @@
       this._initCartList();
     },
     // 局部过滤器
-    filters: {
-      // 传递一个函数进去
-      currency: currency
-    },
+//    filters: {
+//      // 传递一个函数进去
+//      currency: currency
+//    },
     computed: {
       // 全部选中标记
       checkAllFlag() {

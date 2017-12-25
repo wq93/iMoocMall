@@ -9,9 +9,10 @@ import './assets/css/base.css'
 import './assets/css/checkout.css'
 import './assets/css/login.css'
 import './assets/css/product.css'
+import {currency} from './util/currency'
 
 Vue.config.productionTip = false;
-
+Vue.filter('currency',currency)
 Vue.use(Vuex);
 Vue.use(infiniteScroll)
 Vue.use(VueLazyLoad, {
@@ -20,15 +21,15 @@ Vue.use(VueLazyLoad, {
 })
 const store = new Vuex.Store({
   state: {
-    nickName:'',
-    cartCount:0
+    nickName: '',
+    cartCount: 0
   },
   mutations: {
     //更新用户信息
     updateUserInfo(state, nickName) {
       state.nickName = nickName;
     },
-    updateCartCount(state,cartCount){
+    updateCartCount(state, cartCount) {
       state.cartCount += cartCount;
     }
   }
@@ -39,33 +40,33 @@ new Vue({
   el: '#app',
   store,
   router,
-  mounted(){
+  mounted() {
     //this.checkLogin();
     //this.getCartCount();
   },
-  methods:{
-    checkLogin(){
-      axios.get("users/checkLogin").then(res=> {
+  methods: {
+    checkLogin() {
+      axios.get("users/checkLogin").then(res => {
         var res = res.data;
         if (res.status == "0") {
           this.$store.commit("updateUserInfo", res.result);
-        }else{
-          if(this.$route.path!="/goods"){
+        } else {
+          if (this.$route.path != "/goods") {
             this.$router.push("/goods");
           }
         }
       });
     },
-    getCartCount(){
-      axios.get("users/getCartCount").then(res=>{
+    getCartCount() {
+      axios.get("users/getCartCount").then(res => {
         var res = res.data;
-        if(res.status=="0"){
-          this.$store.commit("updateCartCount",res.result);
+        if (res.status == "0") {
+          this.$store.commit("updateCartCount", res.result);
         }
       });
     }
   },
   template: '<App/>',
   //render: h => h(App),
-  components: { App }
+  components: {App}
 });//.$mount('#app')
