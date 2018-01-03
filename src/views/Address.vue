@@ -72,29 +72,11 @@
           <div class="addr-list-wrap">
             <div class="addr-list">
               <ul>
-                <li>
+                <li v-for="item in addressList">
                   <dl>
-                    <dt>Jack</dt>
-                    <dd class="address">海淀区朝阳公园</dd>
-                    <dd class="tel">18610000000</dd>
-                  </dl>
-                  <div class="addr-opration addr-del">
-                    <a href="javascript:;" class="addr-del-btn">
-                      <svg class="icon icon-del">
-                        <use xlink:href="#icon-del"></use>
-                      </svg>
-                    </a>
-                  </div>
-                  <div class="addr-opration addr-set-default">
-                    <a href="javascript:;" class="addr-set-default-btn"><i>Set default</i></a>
-                  </div>
-                  <div class="addr-opration addr-default">Default address</div>
-                </li>
-                <li>
-                  <dl>
-                    <dt>Tom</dt>
-                    <dd class="address">海淀区中关村</dd>
-                    <dd class="tel">18510000000</dd>
+                    <dt>{{item.userName}}</dt>
+                    <dd class="address">{{item.streetName}}</dd>
+                    <dd class="tel">{{item.tel}}</dd>
                   </dl>
                   <div class="addr-opration addr-del">
                     <a href="javascript:;" class="addr-del-btn">
@@ -169,6 +151,7 @@
   import axios from 'axios'
 
   export default {
+    // data 是个函数
     data() {
       return {
         addressList: [],
