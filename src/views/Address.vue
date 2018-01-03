@@ -170,7 +170,23 @@
 
   export default {
     data() {
-      return {}
+      return {
+        addressList: [],
+      }
+    },
+    mounted() {
+      this._initAddressList();
+    },
+    methods:{
+      _initAddressList() {
+        axios.get('/users/address').then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+            this.addressList = res.result
+            console.log(this.addressList)
+          }
+        })
+      }
     },
     components: {
       NavHeader,
