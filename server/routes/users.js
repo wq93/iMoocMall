@@ -218,4 +218,27 @@ router.post('/editCheckAll', (req, res, next) => {
     }
   })
 })
+
+// 查询用户地址接口
+router.get('/address', (req, res, next) => {
+  // 用户id
+  let userId = req.cookies.userId
+  User.findOne({userId}, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        msg: error.message,
+        result: ''
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: 0,
+          msg: '',
+          result: doc.addressList
+        })
+      }
+    }
+  })
+})
 module.exports = router;
