@@ -72,7 +72,10 @@
           <div class="addr-list-wrap">
             <div class="addr-list">
               <ul>
-                <li v-for="item in addressList">
+                <li
+                  v-for="(item,index) in addressListFilter"
+                  :class="{'check':checkIndex===index}"
+                  @click="checkIndex=index">
                   <dl>
                     <dt>{{item.userName}}</dt>
                     <dd class="address">{{item.streetName}}</dd>
@@ -104,7 +107,7 @@
             </div>
 
             <div class="shipping-addr-more">
-              <a class="addr-more-btn up-down-btn" href="javascript:;">
+              <a class="addr-more-btn up-down-btn" href="javascript:;" @click="expand" :class="{'open':limit>3}">
                 more
                 <i class="i-up-down">
                   <i class="i-up-down-l"></i>
@@ -154,21 +157,35 @@
     // data 是个函数
     data() {
       return {
+        limit: 3,
         addressList: [],
+        checkIndex: 0, // 选中的索引
       }
     },
     mounted() {
       this._initAddressList();
     },
-    methods:{
+    computed: {
+      addressListFilter() {
+        let list = this.addressList.slice(0, this.limit)
+        return list
+      }
+    },
+    methods: {
       _initAddressList() {
         axios.get('/users/address').then((response) => {
           let res = response.data
           if (res.status === 0) {
             this.addressList = res.result
-            console.log(this.addressList)
           }
         })
+      },
+      expand() {
+        if (this.limit === 3) {
+          this.limit = this.addressList.length
+        } else {
+          this.limit = 3
+        }
       }
     },
     components: {
