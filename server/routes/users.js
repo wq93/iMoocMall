@@ -241,4 +241,62 @@ router.get('/address', (req, res, next) => {
     }
   })
 })
+// 设置默认地址接口
+router.post("/setDefault", (req, res, next) => {
+  // 用户id
+  let userId = req.cookies.userId
+  let addressId = req.body.addressId;
+  if (!addressId) {
+    res.json({
+      status: 1003,
+      msg: 'addressId is null',
+      result: ''
+    })
+  } else {
+    User.findOne({userId}, (err, doc) => {
+      if (err) {
+        res.json({
+          status: 1,
+          msg: error.message,
+          result: ''
+        })
+      } else {
+        User.findOne({userId: userId}, (err, doc) => {
+          if (err) {
+            res.json({
+              status: 1,
+              msg: err.message,
+              result: ''
+            });
+          } else {
+            let addressList = doc.addressList;
+            addressList.forEach((item) => {
+              if (item.addressId == addressId) {
+                item.isDefault = true;
+              } else {
+                item.isDefault = false;
+              }
+            });
+
+            doc.save((err1, doc1) => {
+              if (err) {
+                res.json({
+                  status: 1,
+                  msg: err.message,
+                  result: ''
+                });
+              } else {
+                res.json({
+                  status: 0,
+                  msg: '',
+                  result: ''
+                });
+              }
+            })
+          }
+        });
+      }
+    })
+  }
+})
 module.exports = router;
