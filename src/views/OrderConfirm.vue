@@ -61,31 +61,32 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li>
+              <!--只渲染选中的-->
+              <li v-for="(item,index) in cartList" v-if="item.checked==='1'">
                 <div class="cart-tab-1">
                   <div class="cart-item-pic">
-                    <img src="/static/1.jpg" alt="XX">
+                    <img :src="'/static/'+ item.productImage" :alt="'/static/'+ item.productName">
                   </div>
                   <div class="cart-item-title">
-                    <div class="item-name">XX</div>
+                    <div class="item-name">{{item.productName}}</div>
 
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">199</div>
+                  <div class="item-price">{{item.salePrice | currency('$')}}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self">
                       <div class="select-self-area">
-                        <span class="select-ipt">×5</span>
+                        <span class="select-ipt">×{{item.productNum}}</span>
                       </div>
                     </div>
                     <div class="item-stock item-stock-no">In Stock</div>
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">5000</div>
+                  <div class="item-price-total">{{(item.salePrice * item.productNum) | currency('$')}}</div>
                 </div>
               </li>
             </ul>
@@ -98,23 +99,23 @@
             <ul>
               <li>
                 <span>Item subtotal:</span>
-                <span>5000</span>
+                <span>{{subTotal | currency('$')}}</span>
               </li>
               <li>
                 <span>Shipping:</span>
-                <span>30</span>
+                <span>{{shipping | currency('$')}}</span>
               </li>
               <li>
                 <span>Discount:</span>
-                <span>100</span>
+                <span>{{discount | currency('$')}}</span>
               </li>
               <li>
                 <span>Tax:</span>
-                <span>300</span>
+                <span>{{tax | currency('$')}}</span>
               </li>
               <li class="order-total-price">
                 <span>Order total:</span>
-                <span>5230</span>
+                <span>{{orderTotal | currency('$')}}</span>
               </li>
             </ul>
           </div>
@@ -144,7 +145,34 @@
 
   export default {
     data() {
-      return {}
+      return {
+        cartList: [], // 购物车商品
+        shipping: 10, // 配送费
+        discount: 0, // 优惠
+        tax: 0, // 税金
+        subTotal: 0, // 订单金额
+        orderTotal: 0, //订单支付金额
+      }
+    },
+    mounted() {
+      this._initCartList()
+    },
+    methods: {
+      _initCartList() {
+        axios.get('/users/cartList').then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+            this.cartList = res.result
+            // 订单金额
+            $.each(this.cartList, (item, val) => {
+              if (val.checked == '1') {
+                this.subTotal += val.salePrice * val.productNum;
+                this.orderTotal = this.subTotal + this.shipping - this.discount + this.tax;
+              }
+            });
+          }
+        })
+      }
     },
     components: {
       NavHeader,
