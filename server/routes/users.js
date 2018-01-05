@@ -289,7 +289,7 @@ router.post("/setDefault", (req, res, next) => {
                 res.json({
                   status: 0,
                   msg: '',
-                  result: ''
+                  result: doc1.addressList
                 });
               }
             })
@@ -298,5 +298,40 @@ router.post("/setDefault", (req, res, next) => {
       }
     })
   }
+})
+
+// 删除地址接口
+router.post('/delAddress', (req, res, next) => {
+  // 用户id
+  let userId = req.cookies.userId
+  let addressId = req.body.addressId;
+  User.update({
+    // 根据userId条件查找
+    userId
+  }, {
+    $pull: {
+      // cartList集合下的
+      'addressList': {
+        // 这个元素
+        addressId
+      }
+    }
+  }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        msg: error.message,
+        result: ''
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: 0,
+          msg: '删除成功',
+          result: doc.addressId
+        })
+      }
+    }
+  });
 })
 module.exports = router;

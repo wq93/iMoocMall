@@ -81,7 +81,7 @@
                     <dd class="address">{{item.streetName}}</dd>
                     <dd class="tel">{{item.tel}}</dd>
                   </dl>
-                  <div class="addr-opration addr-del">
+                  <div class="addr-opration addr-del" @click="delAddressConfim(item.addressId)">
                     <a href="javascript:;" class="addr-del-btn">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
@@ -89,7 +89,8 @@
                     </a>
                   </div>
                   <div class="addr-opration addr-set-default">
-                    <a href="javascript:;" class="addr-set-default-btn" v-if="!item.isDefault" @click="setDefault(item.addressId)"><i>Set default</i></a>
+                    <a href="javascript:;" class="addr-set-default-btn" v-if="!item.isDefault"
+                       @click="setDefault(item.addressId)"><i>Set default</i></a>
                   </div>
                   <div class="addr-opration addr-default" v-if="item.isDefault">Default address</div>
                 </li>
@@ -140,6 +141,15 @@
         </div>
       </div>
     </div>
+    <modal :mdShow="isMdShow" @close="closeModal">
+      <p slot="message">
+        您是否确认要删除此地址?
+      </p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:;" @click="delAddress">确认</a>
+        <a class="btn btn--m btn--red" href="javascript:;" @click="isMdShow=false">取消</a>
+      </div>
+    </modal>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -160,6 +170,8 @@
         limit: 3,
         addressList: [],
         checkIndex: 0, // 选中的索引
+        isMdShow: false,
+        addressId: ''
       }
     },
     mounted() {
@@ -189,13 +201,30 @@
       },
       setDefault(id) {
         let addressId = id
-        axios.post('/users/setDefault',{addressId}).then((response) => {
+        axios.post('/users/setDefault', {addressId}).then((response) => {
           let res = response.data
           if (res.status === 0) {
-            console.log(res.result)
             this._initAddressList()
           }
         })
+      },
+      delAddressConfim(id) {
+        this.isMdShow = true
+        let addressId = id
+        this.addressId = addressId
+      },
+      delAddress() { // 删除地址
+        let addressId = this.addressId
+        axios.post('/users/delAddress', {addressId}).then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+            this._initAddressList()
+            this.isMdShow = false
+          }
+        })
+      },
+      closeModal() {
+        this.isMdShow = false
       }
     },
     components: {
