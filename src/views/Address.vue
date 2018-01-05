@@ -75,7 +75,7 @@
                 <li
                   v-for="(item,index) in addressListFilter"
                   :class="{'check':checkIndex===index}"
-                  @click="checkIndex=index">
+                  @click="checkIndex=index,selectedAddrId=item.addressId">
                   <dl>
                     <dt>{{item.userName}}</dt>
                     <dd class="address">{{item.streetName}}</dd>
@@ -136,7 +136,10 @@
             </div>
           </div>
           <div class="next-btn-wrap">
-            <a class="btn btn--m btn--red" href="#">Next</a>
+            <!--<a class="btn btn&#45;&#45;m btn&#45;&#45;red" href="#">Next</a>-->
+            <router-link class="btn btn--m btn--red" :to="{path:'orderConfirm',query:{'addressId':selectedAddrId}}">
+              Next
+            </router-link>
           </div>
         </div>
       </div>
@@ -162,6 +165,7 @@
   import Modal from './../components/Modal'
   import {currency} from './../util/currency'
   import axios from 'axios'
+  import $ from 'jquery'
 
   export default {
     // data 是个函数
@@ -171,7 +175,8 @@
         addressList: [],
         checkIndex: 0, // 选中的索引
         isMdShow: false,
-        addressId: ''
+        addressId: '',
+        selectedAddrId: '' // 选中的地址id
       }
     },
     mounted() {
@@ -189,6 +194,10 @@
           let res = response.data
           if (res.status === 0) {
             this.addressList = res.result
+            // 设置第一个selectedAddrId
+            $.each(this.addressList, (item, val) => {
+              if (val.isDefault) this.selectedAddrId = val.addressId
+            })
           }
         })
       },
