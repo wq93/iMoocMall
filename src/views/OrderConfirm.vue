@@ -123,10 +123,12 @@
 
         <div class="order-foot-wrap">
           <div class="prev-btn-wrap">
-            <a class="btn btn--m">Previous</a>
+            <!--<a class="btn btn&#45;&#45;m">Previous</a>-->
+            <router-link class="btn btn--m" to="address">Previous</router-link>
           </div>
           <div class="next-btn-wrap">
-            <button class="btn btn--m btn--red">Proceed to payment</button>
+            <!--<button class="btn btn&#45;&#45;m btn&#45;&#45;red">Proceed to payment</button>-->
+            <router-link class="btn btn--m btn--red" @click="payMent">Proceed to payment</router-link>
           </div>
         </div>
       </div>
@@ -172,6 +174,9 @@
             });
           }
         })
+      },
+      payMent() {
+
       }
     },
     components: {
