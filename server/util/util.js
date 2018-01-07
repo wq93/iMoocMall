@@ -1,6 +1,7 @@
 /**
  * Created by jacksoft on 17/4/26.
  */
+// 直接在原型上面挂载
 Date.prototype.Format = function (fmt) {
   var o = {
     "M+": this.getMonth() + 1, //月份

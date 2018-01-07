@@ -127,8 +127,8 @@
             <router-link class="btn btn--m" to="address">Previous</router-link>
           </div>
           <div class="next-btn-wrap">
-            <!--<button class="btn btn&#45;&#45;m btn&#45;&#45;red">Proceed to payment</button>-->
-            <router-link class="btn btn--m btn--red" @click="payMent">Proceed to payment</router-link>
+            <button class="btn btn--m btn--red" @click="payMent">Proceed to payment</button>
+            <!--<router-link class="btn btn&#45;&#45;m btn&#45;&#45;red" @click="payMent">Proceed to payment</router-link>-->
           </div>
         </div>
       </div>
@@ -176,7 +176,14 @@
         })
       },
       payMent() {
-
+        let addressId = this.$route.query.addressId;
+        let orderTotal = this.orderTotal
+        axios.post('/users/payMent', {addressId, orderTotal}).then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+            console.log(res.result)
+          }
+        })
       }
     },
     components: {

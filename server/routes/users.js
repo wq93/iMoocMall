@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/users')
+require('../util/util')
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
@@ -334,4 +335,75 @@ router.post('/delAddress', (req, res, next) => {
     }
   });
 })
+// 生成订单接口
+router.post('/payMent', (req, res, next) => {
+  // 用户id
+  let userId = req.cookies.userId
+  let orderTotal = req.body.orderTotal
+  let addressId = req.body.addressId
+  User.findOne({
+    // 根据userId条件查找
+    userId
+  }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: 1,
+        msg: error.message,
+        result: ''
+      })
+    } else {
+      let address = ''
+      let goodList = []
+      let order = {}
+      // 获取当前用户的地址信息
+      doc.addressList.forEach((item) => {
+        // 对比id
+        if (item.addressId === addressId) {
+          address = item
+        }
+      })
+      // 获取用户购物车的购买商品
+      doc.cartList.filter((item) => {
+        if (item.checked === '1') {
+          goodList.push(item)
+        }
+      })
+      //****** 生成订单ID ******
+      let platform = '622'
+      let r1 = Math.floor(Math.random() * 10)
+      let r2 = Math.floor(Math.random() * 10)
+      let sysDate = new Date().Format('yyyyMMddhhmmss')
+      let createDate = new Date().Format('yyyy-MM-dd hh:mm:ss')
+      let orderId = platform + userId + r1 + sysDate + r2; // 订单ID
+      // 订单详情
+      order = {
+        // 0表示成功 1表示失败
+        orderStatus: 0,
+        orderTotal,
+        goodList,
+        addressInfo: address,
+        orderId,
+        createDate
+      }
+      // 向数据库保存订单详情
+      doc.orderList.push(order)
+      doc.save((err1, doc1) => {
+        if (err1) {
+          res.json({
+            status: 1,
+            msg: error.message,
+            result: ''
+          })
+        } else {
+          res.json({
+            status: 0,
+            msg: '',
+            result: order
+          });
+        }
+      })
+    }
+  });
+})
+
 module.exports = router;
