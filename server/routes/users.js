@@ -78,7 +78,6 @@ router.get('/checkLogin', (req, res, next) => {
     });
   }
 })
-
 // 查询当前用户的购物车数据
 router.get('/cartList', (req, res, next) => {
   // 用户id
@@ -137,7 +136,6 @@ router.post('/cartDel', (req, res, next) => {
   });
 
 })
-
 // 修改当前用户的购物车商品的数量
 router.post('/cartEdit', (req, res, next) => {
   // 用户id
@@ -178,7 +176,6 @@ router.post('/cartEdit', (req, res, next) => {
   });
 
 })
-
 // 全部选中当前用户的购物车商品的数量
 router.post('/editCheckAll', (req, res, next) => {
   // 用户id
@@ -219,7 +216,6 @@ router.post('/editCheckAll', (req, res, next) => {
     }
   })
 })
-
 // 查询用户地址接口
 router.get('/address', (req, res, next) => {
   // 用户id
@@ -300,7 +296,6 @@ router.post("/setDefault", (req, res, next) => {
     })
   }
 })
-
 // 删除地址接口
 router.post('/delAddress', (req, res, next) => {
   // 用户id
@@ -405,5 +400,50 @@ router.post('/payMent', (req, res, next) => {
     }
   });
 })
-
+// 订单详情接口
+router.get('/orderDetail', (req, res, next) => {
+  // 用户id
+  let userId = req.cookies.userId
+  // 订单id
+  let orderId = req.param("orderId")
+  User.findOne({userId}, (err, userInfo) => {
+    if (err) {
+      res.json({
+        status: 1,
+        msg: error.message,
+        result: ''
+      })
+    } else {
+      let orderList = userInfo.orderList
+      if (orderList.length) {
+        let orderDetail = {}
+        orderList.forEach((item) => {
+          // 数据库的订单列表id等于传入的id
+          if (item.orderId === orderId) {
+            orderDetail = item
+          }
+        })
+        if (orderDetail.orderTotal > 0) {
+          res.json({
+            status: 0,
+            msg: '',
+            result: orderDetail
+          })
+        } else {
+          res.json({
+            status: 120001,
+            msg: '订单金额为0,无效订单',
+            result: ''
+          })
+        }
+      } else {
+        res.json({
+          status: 120001,
+          msg: '当前用户没有创建订单',
+          result: ''
+        })
+      }
+    }
+  })
+})
 module.exports = router;

@@ -53,6 +53,30 @@
         orderTotal: 0
       }
     },
+    mounted() {
+      this._initOrderDetail()
+    },
+    methods: {
+      _initOrderDetail() {
+        let orderId = this.$route.query.orderId
+        console.log(orderId)
+        if (!orderId) {
+          return
+        }
+        axios.get('/users/orderDetail', {
+          params: {
+            orderId
+          }
+        }).then((response) => {
+          let res = response.data
+          if (res.status === 0) {
+            let orderDetail = res.result.orderDetail
+            this.orderId = orderDetail.orderId
+            this.orderTotal = orderDetail.orderTotal
+          }
+        })
+      }
+    },
     components: {
       NavHeader,
       NavFooter,
