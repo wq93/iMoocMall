@@ -20,15 +20,17 @@
         <div class="order-create-main">
           <h3>Congratulations! <br>Your order is under processing!</h3>
           <p>
-            <span>Order ID：62000000000</span>
-            <span>Order total：5230</span>
+            <span>Order ID：{{orderId}}</span>
+            <span>Order total：{{orderTotal | currency($)}}</span>
           </p>
           <div class="order-create-btn-wrap">
             <div class="btn-l-wrap">
-              <a class="btn btn--m">Cart List</a>
+              <!--<a class="btn btn&#45;&#45;m">Cart List</a>-->
+              <router-link class="btn btn--m" to="/cart">Cart List</router-link>
             </div>
             <div class="btn-r-wrap">
-              <a class="btn btn--m">Goods List</a>
+              <!--<a class="btn btn&#45;&#45;m">Goods List</a>-->
+              <router-link class="btn btn--m" to="/goods">Goods List</router-link>
             </div>
           </div>
         </div>
@@ -70,7 +72,7 @@
         }).then((response) => {
           let res = response.data
           if (res.status === 0) {
-            let orderDetail = res.result.orderDetail
+            let orderDetail = res.result
             this.orderId = orderDetail.orderId
             this.orderTotal = orderDetail.orderTotal
           }
