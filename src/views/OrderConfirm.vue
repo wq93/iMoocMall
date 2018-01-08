@@ -181,7 +181,11 @@
         axios.post('/users/payMent', {addressId, orderTotal}).then((response) => {
           let res = response.data
           if (res.status === 0) {
-            console.log(res.result)
+            // 路由跳转
+            let data = res.result
+            this.$router.push({
+              path: '/orderSuccess?orderId=' + data.orderId
+            })
           }
         })
       }
