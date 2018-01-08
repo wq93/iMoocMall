@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuex from 'vuex'
+import axios from 'axios'
 import infiniteScroll from 'vue-infinite-scroll'
 import VueLazyLoad from 'vue-lazyload'
 // 加载对应的css文件
@@ -20,6 +21,7 @@ Vue.use(VueLazyLoad, {
   try: 3 // default 1
 })
 const store = new Vuex.Store({
+  // 定义状态
   state: {
     nickName: '',
     cartCount: 0
@@ -41,14 +43,14 @@ new Vue({
   store,
   router,
   mounted() {
-    //this.checkLogin();
-    //this.getCartCount();
+    this.checkLogin();
+    this.getCartCount();
   },
   methods: {
     checkLogin() {
       axios.get("users/checkLogin").then(res => {
         var res = res.data;
-        if (res.status == "0") {
+        if (res.status == 0) {
           this.$store.commit("updateUserInfo", res.result);
         } else {
           if (this.$route.path != "/goods") {
@@ -60,7 +62,8 @@ new Vue({
     getCartCount() {
       axios.get("users/getCartCount").then(res => {
         var res = res.data;
-        if (res.status == "0") {
+        if (res.status == 0) {
+          // 修改updateCartCount
           this.$store.commit("updateCartCount", res.result);
         }
       });

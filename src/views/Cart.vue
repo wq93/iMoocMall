@@ -210,13 +210,16 @@
       },
       // 发送删除请求
       delCart() {
+        console.log(this.delItem)
         let productId = this.delItem.productId
+        let productNum = this.delItem.productNum
         axios.post('/users/cartDel', {
           productId
         }).then((response) => {
           let res = response.data
           if (res.status === 0) {
             this.modalConfirm = false
+            this.$store.commit("updateCartCount", -productNum);
             this._initCartList()
           }
         })
@@ -225,11 +228,13 @@
       editCart(flag, item) {
         if (flag == 'add') {
           item.productNum++;
+          this.$store.commit("updateCartCount", 1);
         } else if (flag == 'minu') {
           if (item.productNum <= 1) {
             return;
           }
           item.productNum--;
+          this.$store.commit("updateCartCount", -1);
         } else if (flag == 'checked') { // 修改选中
           item.checked = item.checked == "1" ? '0' : '1';
         }
@@ -246,7 +251,7 @@
         }).then((response) => {
           let res = response.data
           if (res.status === 0) {
-            console.log(res)
+
           }
         })
       },

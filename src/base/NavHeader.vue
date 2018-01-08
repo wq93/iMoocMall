@@ -46,7 +46,7 @@
              v-show="nickName"
              @click="logout">Logout</a>
           <div class="navbar-cart-container">
-            <span class="navbar-cart-count"></span>
+            <span class="navbar-cart-count" v-text="cartCount" v-if="cartCount"></span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
               <svg class="navbar-cart-logo">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -95,6 +95,7 @@
 <script>
   import './../assets/css/login.css'
   import axios from 'axios'
+  import {mapState} from 'vuex'
 
   export default {
     data() {
@@ -103,20 +104,33 @@
         userPwd: '',
         errorTip: false, // 错误提示
         loginModalFlag: false, // 是否显示登录框
-        nickName: ''
       }
     },
     mounted() {
       this.checkLogin();
+    },
+    computed: {
+      // 用户名
+      ...mapState(['nickName', 'cartCount'])
+//      nickName() {
+//        return this.$store.state.nickName
+//      },
+//      cartCount() {
+//        return this.$store.state.cartCount
+//      }
     },
     methods: {
       checkLogin() {
         axios.get('/users/checkLogin').then((response) => {
           let res = response.data
           if (res.status === 0) {
-            this.nickName = res.result
+//            this.nickName = res.result
+            this.$store.commit('updateUserInfo', res.result)
+            this.loginModalFlag = false
           } else {
-
+            if (this.$router.path !== '/goods') {
+              this.$router.push('/goods')
+            }
           }
         })
       },
@@ -136,7 +150,7 @@
             this.errorTip = false
             // to-do
             this.loginModalFlag = false
-            this.nickName = res.result.userName
+            this.$store.commit('updateUserInfo', res.result.userName)
           } else {
             this.errorTip = true
             this.loginModalFlag = true
@@ -147,7 +161,7 @@
         axios.post('/users/logout').then((response) => {
           let res = response.data
           if (res.status === 0) {
-            this.nickName = ''
+            this.$store.commit('updateUserInfo', '')
           }
         })
       }

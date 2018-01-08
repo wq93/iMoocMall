@@ -178,6 +178,8 @@
           if (res.status === 0) {
             // 弹框提示
             this.mdShowCart = true
+            // 添加购物车改变vuex
+            this.$store.commit("updateCartCount", 1);
           } else {
             this.mdShow = true
           }
